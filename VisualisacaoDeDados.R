@@ -1,4 +1,3 @@
-banco = read.csv(file="C:\\Users\\gabfr\\OneDrive\\Área de Trabalho\\netflix_titles.csv", sep = ",")
 #Pacotes
 {
 library(tidyverse)
@@ -7,7 +6,12 @@ library(ggthemes)
 library(ggpubr)
 library(readr)
 }
-#Começando o tratamento dos dados
+#Lendo a base
+{
+urlfile<-'https://raw.githubusercontent.com/Gabriel4210/FirstShiny/main/netflix_titles.csv'
+banco<-read.csv(urlfile)
+}
+#ComeÃ§ando o tratamento dos dados
 {
   summary(banco)
 banco[,2]=as.factor(banco[,2])
@@ -138,17 +142,17 @@ ctrn2 = ctr_tibblen2%>%
   count()%>%
   filter(!is.na(genero))
 }
-#Fazendo os primeiros gráficos
+#Fazendo os primeiros grÃ¡ficos
 {
-  #Número de obras por país
+  #NÃºmero de obras por paÃ­s
   plot1 =ctr1%>%
     filter(n>100 && country_name != '')%>%
     ggplot(aes(n, reorder(country_name, FUN=median, n)))+
     geom_bar(stat='identity', show.legend = F, colour="blue")+
     labs(
-      x='Número de obras na Netflix',
-      y='País',
-      title='Países com mais obras na Netflix',
+      x='NÃºmero de obras na Netflix',
+      y='PaÃ­s',
+      title='PaÃ­ses com mais obras na Netflix',
       caption = "Fonte: ")+
       theme_economist()
   
@@ -158,7 +162,7 @@ ctrn2 = ctr_tibblen2%>%
     ggplot(aes(n, reorder(director_name, FUN=median, n)))+
     geom_bar(stat='identity', show.legend = F, colour="blue")+
     labs(
-      x='Número de obras na Netflix',
+      x='NÃºmero de obras na Netflix',
       y='Diretor',
       title='Diretores com mais obras na Netflix',
       caption = "Fonte: ")+
@@ -171,25 +175,25 @@ ctrn2 = ctr_tibblen2%>%
     ggplot(aes(n, reorder(cast_name, FUN=median, n)))+
     geom_bar(stat='identity', show.legend = F, colour="blue")+
     labs(
-      x='Número de obras na Netflix',
+      x='NÃºmero de obras na Netflix',
       y='Ator',
       title='Atores com mais obras na Netflix',
       caption = "Fonte: ")+
     theme_economist() 
 
-  #Gêneros mais populares na Netflix
+  #GÃªneros mais populares na Netflix
   plot4 =ctr4%>%
     filter(n>300 && genero != '')%>%
     ggplot(aes(n, reorder(genero, FUN=median, n)))+
     geom_bar(stat='identity', show.legend = F, colour="blue")+
     labs(
-      x='Número de obras na Netflix',
-      y='Gêneros',
-      title='Gêneros mais populares na Netflix',
+      x='NÃºmero de obras na Netflix',
+      y='GÃªneros',
+      title='GÃªneros mais populares na Netflix',
       caption = "Fonte: ")+
     theme_economist() 
   
-  #Contagem de filmes e séries produzidos por ano
+  #Contagem de filmes e sÃ©ries produzidos por ano
   plot5=banco%>%
     group_by(date_added, type)%>%
     summarise(n=n())%>%
@@ -199,9 +203,9 @@ ctrn2 = ctr_tibblen2%>%
     labs(
       x='Ano',
       y='Quantidade',
-      title='Filmes e séries produzidos por ano')+
+      title='Filmes e sÃ©ries produzidos por ano')+
     scale_fill_manual(values = c("Movie" = "#2998CC","TV Show" = "#5229CC"))
-  #Proporção de filmes e séries produzidos por ano
+  #ProporÃ§Ã£o de filmes e sÃ©ries produzidos por ano
   plot6=banco%>%
     group_by(date_added, type)%>%
     summarise(n=n())%>%
@@ -210,11 +214,11 @@ ctrn2 = ctr_tibblen2%>%
     theme_economist()+
     labs(
       x='Ano',
-      y='Proporção',
-      title='Proporção de filmes e séries produzidos por ano')+
+      y='ProporÃ§Ã£o',
+      title='ProporÃ§Ã£o de filmes e sÃ©ries produzidos por ano')+
     scale_fill_manual(values = c("Movie" = "#2998CC","TV Show" = "#5229CC"))
   plot6
-  #Porcentagem de filmes e séries presentes no catalogo
+  #Porcentagem de filmes e sÃ©ries presentes no catalogo
   Film_Types = banco %>% group_by(type) %>% count() %>% ungroup() %>% 
     mutate(perc = `n` / sum(`n`)) %>% 
     arrange(perc) %>%
@@ -230,17 +234,17 @@ ctrn2 = ctr_tibblen2%>%
     geom_rect() +
     geom_label(x=3.5, aes(y=labelPosition, label=label), size=4.5)+
     coord_polar(theta = "y") +
-    labs(title="Porcentagem de filmes e séries presentes no catálogo") +
+    labs(title="Porcentagem de filmes e sÃ©ries presentes no catÃ¡logo") +
     theme_void() +
     scale_fill_manual(values = c("Movie" = "#2998CC","TV Show" = "#5229CC"))+
     xlim(c(2,4))+
     theme(legend.position = "none")
   
   }
-#Aprofundando os gráficos
+#Aprofundando os grÃ¡ficos
 {
 
-  #Porcentagem da quantidade de filmes dirigidos por número de diretores
+  #Porcentagem da quantidade de filmes dirigidos por nÃºmero de diretores
   ctr5 = rename(ctr2, num = n)
   Diretor_num = ctr5 %>% filter(director_name != '') %>% group_by(num) %>% count() %>% ungroup() %>% 
     mutate(perc = `n` / sum(`n`)) %>% 
@@ -257,12 +261,12 @@ ctrn2 = ctr_tibblen2%>%
     geom_rect() +
     geom_label(x=3.5, aes(y=labelPosition, label=Diretor_num$label), size=4.5)+
     coord_polar(theta = "y") +
-    labs(title="Porcentagem da quantidade de filmes dirigidos por número de diretores") +
+    labs(title="Porcentagem da quantidade de filmes dirigidos por nÃºmero de diretores") +
     theme_void() +
     xlim(c(2,4))+
     theme(legend.position = "none")
   
-  #Porcentagem do número de participações de membro do elenco por número de membros 
+  #Porcentagem do nÃºmero de participaÃ§Ãµes de membro do elenco por nÃºmero de membros 
   ctr6 = rename(ctr3, num = n)
   Cast_num = ctr6 %>% filter(cast_name != '') %>% group_by(num) %>% count() %>% ungroup() %>% 
     mutate(perc = `n` / sum(`n`)) %>% 
@@ -279,7 +283,7 @@ ctrn2 = ctr_tibblen2%>%
     geom_rect() +
     geom_label(x=3.5, aes(y=labelPosition, label=Cast_num$label), size=4.5)+
     coord_polar(theta = "y") +
-    labs(title="Porcentagem do número de participações de membro do elenco por número de membros") +
+    labs(title="Porcentagem do nÃºmero de participaÃ§Ãµes de membro do elenco por nÃºmero de membros") +
     theme_void() +
     xlim(c(2,4))+
     theme(legend.position = "none")
@@ -291,9 +295,9 @@ ctrn2 = ctr_tibblen2%>%
     ggplot(aes(num, reorder(genero, FUN=median, num)))+
     geom_bar(stat='identity', show.legend = F, colour="red")+
     labs(
-      x='Número de obras na Netflix',
-      y='Gênero',
-      title='Principais Gêneros produzidos nos Estados Unidos',
+      x='NÃºmero de obras na Netflix',
+      y='GÃªnero',
+      title='Principais GÃªneros produzidos nos Estados Unidos',
       caption = "Fonte: ")+
     theme_economist()
 
@@ -304,9 +308,9 @@ ctrn2 = ctr_tibblen2%>%
     ggplot(aes(n, reorder(genero, FUN=median, n)))+
     geom_bar(stat='identity', show.legend = F, colour="orange")+
     labs(
-      x='Número de obras na Netflix',
-      y='Gênero',
-      title='Principais Gêneros produzidos na India',
+      x='NÃºmero de obras na Netflix',
+      y='GÃªnero',
+      title='Principais GÃªneros produzidos na India',
       caption = "Fonte: ")+
     theme_economist()
 }
@@ -314,16 +318,16 @@ ctrn2 = ctr_tibblen2%>%
 {
 ui <- dashboardPage(skin = "red",
                     
-                    dashboardHeader(title = "Catálogo da Netflix",
+                    dashboardHeader(title = "CatÃ¡logo da Netflix",
                                     titleWidth = 250),
                     
                     dashboardSidebar(
                       width = 250,
                       sidebarMenu(
                         menuItem("Contexto", tabName = "item1"),
-                        menuItem("Sobre Filmes e Séries", tabName = "item2"),
+                        menuItem("Sobre Filmes e SÃ©ries", tabName = "item2"),
                         menuItem("Sobre Atores e Diretores", tabName = "item3"),
-                        menuItem("Sobre Países e Gêneros", tabName = "item4")
+                        menuItem("Sobre PaÃ­ses e GÃªneros", tabName = "item4")
                       )),
                     
                     dashboardBody(
@@ -334,8 +338,8 @@ ui <- dashboardPage(skin = "red",
                                       width = 50,
                                       height = 400,
                                       solidHeader = T,
-                                      title = "Motivação do estudo",
-                                      h2("Tendo em vista o crescimento do uso de plataformas de streaming nos últimos anos, é interessante observar qual o perfil geral do conteúdo que é disponibilizado em uma das principais plataformas da atualidade")),
+                                      title = "MotivaÃ§Ã£o do estudo",
+                                      h2("Tendo em vista o crescimento do uso de plataformas de streaming nos Ãºltimos anos, Ã© interessante observar qual o perfil geral do conteÃºdo que Ã© disponibilizado em uma das principais plataformas da atualidade")),
                                   br(),
                                   box(width = 50,
                                       height = 700,
@@ -383,7 +387,7 @@ server <- function(input, output) {
       geom_rect() +
       geom_label(x=3.5, aes(y=labelPosition, label=label), size=4.5)+
       coord_polar(theta = "y") +
-      labs(title="Porcentagem de filmes e séries presentes no catálogo") +
+      labs(title="Porcentagem de filmes e sÃ©ries presentes no catÃ¡logo") +
       theme_void() +
       scale_fill_manual(values = c("Movie" = "#2998CC","TV Show" = "#5229CC"))+
       xlim(c(2,4))+
@@ -402,7 +406,7 @@ server <- function(input, output) {
       labs(
         x='Ano',
         y='Quantidade',
-        title='Filmes e séries produzidos por ano')+
+        title='Filmes e sÃ©ries produzidos por ano')+
       scale_fill_manual(values = c("Movie" = "#2998CC","TV Show" = "#5229CC"))
     
     
@@ -414,12 +418,12 @@ server <- function(input, output) {
       theme_economist()+
       labs(
         x='Ano',
-        y='Proporção',
-        title='Proporção de filmes e séries produzidos por ano')+
+        y='ProporÃ§Ã£o',
+        title='ProporÃ§Ã£o de filmes e sÃ©ries produzidos por ano')+
       scale_fill_manual(values = c("Movie" = "#2998CC","TV Show" = "#5229CC"))
     
     gg2 <- ggarrange(bp3, bp4, labels = c("", ""), ncol = 2, nrow = 1)
-    annotate_figure(gg2, top = text_grob("Comparação de produção de filmes e séries por ano", color = "black", face = "bold", size = 20))
+    annotate_figure(gg2, top = text_grob("ComparaÃ§Ã£o de produÃ§Ã£o de filmes e sÃ©ries por ano", color = "black", face = "bold", size = 20))
     
   })
   
@@ -429,7 +433,7 @@ server <- function(input, output) {
       ggplot(aes(n, reorder(cast_name, FUN=median, n)))+
       geom_bar(stat='identity', show.legend = F, colour="blue")+
       labs(
-        x='Número de obras na Netflix',
+        x='NÃºmero de obras na Netflix',
         y='Ator',
         title='Atores com mais obras na Netflix',
         caption = "Fonte: ")+
@@ -441,14 +445,14 @@ server <- function(input, output) {
       ggplot(aes(n, reorder(director_name, FUN=median, n)))+
       geom_bar(stat='identity', show.legend = F, colour="blue")+
       labs(
-        x='Número de obras na Netflix',
+        x='NÃºmero de obras na Netflix',
         y='Diretor',
         title='Diretores com mais obras na Netflix',
         caption = "Fonte: ")+
       theme_economist() 
     
     gg3 <- ggarrange(bp5, bp6, ncol = 2, nrow = 1)
-    annotate_figure(gg3, top = text_grob("Atores e Diretores com mais obras no catálogo", color = "black", face = "bold", size = 20))
+    annotate_figure(gg3, top = text_grob("Atores e Diretores com mais obras no catÃ¡logo", color = "black", face = "bold", size = 20))
     
 
     
@@ -460,9 +464,9 @@ server <- function(input, output) {
       ggplot(aes(n, reorder(country_name, FUN=median, n)))+
       geom_bar(stat='identity', show.legend = F, colour="blue")+
       labs(
-        x='Número de obras na Netflix',
-        y='País',
-        title='Países com mais obras na Netflix',
+        x='NÃºmero de obras na Netflix',
+        y='PaÃ­s',
+        title='PaÃ­ses com mais obras na Netflix',
         caption = "Fonte: ")+
       theme_economist() 
     
@@ -472,14 +476,14 @@ server <- function(input, output) {
       ggplot(aes(n, reorder(genero, FUN=median, n)))+
       geom_bar(stat='identity', show.legend = F, colour="blue")+
       labs(
-        x='Número de obras na Netflix',
-        y='Gêneros',
-        title='Gêneros mais populares na Netflix',
+        x='NÃºmero de obras na Netflix',
+        y='GÃªneros',
+        title='GÃªneros mais populares na Netflix',
         caption = "Fonte: ")+
       theme_economist()  
     
     gg4 <- ggarrange(bp7, bp8, labels = c("", ""), ncol = 2, nrow = 1)
-    annotate_figure(gg4, top = text_grob("Países e gêneros mais populares", color = "black", face = "bold", size = 20))
+    annotate_figure(gg4, top = text_grob("PaÃ­ses e gÃªneros mais populares", color = "black", face = "bold", size = 20))
     
   })
   
@@ -488,7 +492,7 @@ server <- function(input, output) {
       geom_rect() +
       geom_label(x=3.5, aes(y=labelPosition, label=Diretor_num$label), size=4.5)+
       coord_polar(theta = "y") +
-      labs(title="Porcentagem da quantidade de filmes dirigidos por número de diretores") +
+      labs(title="Porcentagem da quantidade de filmes dirigidos por nÃºmero de diretores") +
       theme_void() +
       xlim(c(2,4))+
       theme(legend.position = "none")
@@ -497,7 +501,7 @@ server <- function(input, output) {
       geom_rect() +
       geom_label(x=3.5, aes(y=labelPosition, label=Cast_num$label), size=4.5)+
       coord_polar(theta = "y") +
-      labs(title="Porcentagem do número de participações de membro do elenco por número de membros") +
+      labs(title="Porcentagem do nÃºmero de participaÃ§Ãµes de membro do elenco por nÃºmero de membros") +
       theme_void() +
       xlim(c(2,4))+
       theme(legend.position = "none")
@@ -512,9 +516,9 @@ server <- function(input, output) {
       ggplot(aes(num, reorder(genero, FUN=median, num)))+
       geom_bar(stat='identity', show.legend = F, colour="red")+
       labs(
-        x='Número de obras na Netflix',
-        y='Gênero',
-        title='Principais Gêneros produzidos nos Estados Unidos',
+        x='NÃºmero de obras na Netflix',
+        y='GÃªnero',
+        title='Principais GÃªneros produzidos nos Estados Unidos',
         caption = "Fonte: ")+
       theme_economist()
     
@@ -524,14 +528,14 @@ server <- function(input, output) {
       ggplot(aes(n, reorder(genero, FUN=median, n)))+
       geom_bar(stat='identity', show.legend = F, colour="orange")+
       labs(
-        x='Número de obras na Netflix',
-        y='Gênero',
-        title='Principais Gêneros produzidos na India',
+        x='NÃºmero de obras na Netflix',
+        y='GÃªnero',
+        title='Principais GÃªneros produzidos na India',
         caption = "Fonte: ")+
       theme_economist()
     
     gg6 <- ggarrange(bp11, bp12, labels = c("", ""), ncol = 2, nrow = 1)
-    annotate_figure(gg6, top = text_grob("Principais gêneros nos EUS e India", color = "black", face = "bold", size = 20))
+    annotate_figure(gg6, top = text_grob("Principais gÃªneros nos EUS e India", color = "black", face = "bold", size = 20))
     
   })
   
